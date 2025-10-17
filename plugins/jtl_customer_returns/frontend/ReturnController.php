@@ -451,7 +451,7 @@ class ReturnController
      */
     private function render(string $template, ResponseInterface $response): ResponseInterface
     {
-        $templatePath = PFAD_ROOT . PFAD_PLUGIN . 'jtl_customer_returns/version/100/frontend/templates/' . $template;
+        $templatePath = PFAD_ROOT . PFAD_PLUGIN . 'jtl_customer_returns/frontend/template/' . $template;
         
         $html = $this->smarty->fetch($templatePath);
         
