@@ -16,9 +16,9 @@
     <Install>
         <FrontendLink>
             <Link>
-                <Filename>-</Filename>
+                <Filename>return_page.php</Filename>
                 <Name>Retoure anlegen</Name>
-                <Template>return_form.tpl</Template>
+                <Template>frontend/templates/return_form.tpl</Template>
                 <VisibleAfterLogin>N</VisibleAfterLogin>
                 <PrintButton>N</PrintButton>
                 <SSL>2</SSL>
