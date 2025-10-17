@@ -14,131 +14,140 @@
     
     <!-- Installation -->
     <Install>
-        <![CDATA[
-        <!-- Migrations werden automatisch ausgeführt -->
-        ]]>
-    </Install>
-    
-    <!-- Admin-Menü -->
-    <AdminMenu>
-        <Customlink sort="1">
-            <Name>Retouren-Übersicht</Name>
-            <Filename>overview</Filename>
-            <Icon>fa-list</Icon>
-        </Customlink>
+        <FrontendLink>
+            <Link>
+                <Filename>-</Filename>
+                <Name>Retoure anlegen</Name>
+                <Template>return_form.tpl</Template>
+                <VisibleAfterLogin>N</VisibleAfterLogin>
+                <PrintButton>N</PrintButton>
+                <SSL>2</SSL>
+                <LinkGroup>Fuss</LinkGroup>
+                <LinkLanguage iso="GER">
+                    <Seo>retoure-anlegen</Seo>
+                    <Name>Retoure anlegen</Name>
+                    <Title>Retoure anlegen</Title>
+                    <MetaTitle>Retoure anlegen - Artikel zurücksenden</MetaTitle>
+                    <MetaKeywords>Retoure,Rücksendung,Umtausch,Rückgabe</MetaKeywords>
+                    <MetaDescription>Retoure einfach und bequem online anmelden</MetaDescription>
+                </LinkLanguage>
+            </Link>
+        </FrontendLink>
         
-        <Customlink sort="2">
-            <Name>Statistiken</Name>
-            <Filename>statistics</Filename>
-            <Icon>fa-chart-bar</Icon>
-        </Customlink>
-    </AdminMenu>
-    
-    <!-- Plugin-Einstellungen -->
-    <Settings>
-        <!-- Retourenbedingungen -->
-        <Setting type="number" initialValue="14" sort="1" conf="Y">
-            <Name>Retourenfrist (Tage)</Name>
-            <Description>Anzahl Tage nach Versand, in denen Retouren möglich sind</Description>
-            <ValueName>return_period_days</ValueName>
-        </Setting>
+        <Adminmenu>
+            <Customlink sort="1">
+                <Name>Retouren-Übersicht</Name>
+            </Customlink>
+            
+            <Customlink sort="2">
+                <Name>Statistiken</Name>
+            </Customlink>
+            
+            <Settingslink sort="3">
+                <Name>Einstellungen</Name>
+                <!-- Retourenbedingungen -->
+                <Setting type="number" initialValue="14" sort="1" conf="Y">
+                    <Name>Retourenfrist (Tage)</Name>
+                    <Description>Anzahl Tage nach Versand, in denen Retouren möglich sind</Description>
+                    <ValueName>return_period_days</ValueName>
+                </Setting>
+                
+                <Setting type="selectbox" initialValue="N" sort="2" conf="Y">
+                    <Name>Versandkosten automatisch erstatten</Name>
+                    <Description>Versandkosten bei Retoure automatisch zurückerstatten</Description>
+                    <ValueName>auto_refund_shipping</ValueName>
+                    <SelectboxOptions>
+                        <Option value="Y" sort="1">Ja</Option>
+                        <Option value="N" sort="2">Nein</Option>
+                    </SelectboxOptions>
+                </Setting>
+                
+                <!-- Retourenlabel -->
+                <Setting type="selectbox" initialValue="N" sort="10" conf="Y">
+                    <Name>Retourenlabel automatisch erstellen</Name>
+                    <Description>Retourenlabel bei RMA-Erstellung automatisch generieren</Description>
+                    <ValueName>auto_create_label</ValueName>
+                    <SelectboxOptions>
+                        <Option value="Y" sort="1">Ja</Option>
+                        <Option value="N" sort="2">Nein</Option>
+                    </SelectboxOptions>
+                </Setting>
+                
+                <Setting type="selectbox" initialValue="dhl" sort="11" conf="Y">
+                    <Name>Versanddienstleister</Name>
+                    <Description>Versanddienstleister für Retourenlabel</Description>
+                    <ValueName>shipping_provider</ValueName>
+                    <SelectboxOptions>
+                        <Option value="dhl" sort="1">DHL</Option>
+                        <Option value="dpd" sort="2">DPD</Option>
+                        <Option value="ups" sort="3">UPS</Option>
+                        <Option value="hermes" sort="4">Hermes</Option>
+                    </SelectboxOptions>
+                </Setting>
+                
+                <Setting type="text" initialValue="" sort="12" conf="Y">
+                    <Name>Versanddienstleister API-Key</Name>
+                    <Description>API-Schlüssel für Retourenlabel-Erstellung</Description>
+                    <ValueName>shipping_api_key</ValueName>
+                </Setting>
+                
+                <!-- Produktausschlüsse -->
+                <Setting type="text" initialValue="" sort="20" conf="Y">
+                    <Name>Ausgeschlossene Kategorien</Name>
+                    <Description>Kategorie-IDs (kommagetrennt), die von Retouren ausgeschlossen sind</Description>
+                    <ValueName>excluded_categories</ValueName>
+                </Setting>
+                
+                <Setting type="textarea" initialValue="" sort="21" conf="Y">
+                    <Name>Ausgeschlossene Artikel-Nummern</Name>
+                    <Description>Artikel-Nummern (kommagetrennt), die nicht retourniert werden können</Description>
+                    <ValueName>excluded_product_nos</ValueName>
+                </Setting>
+                
+                <!-- Benachrichtigungen -->
+                <Setting type="text" initialValue="" sort="30" conf="Y">
+                    <Name>Admin-Benachrichtigungs-E-Mail</Name>
+                    <Description>E-Mail-Adresse für Admin-Benachrichtigungen (neue RMAs, Fehler)</Description>
+                    <ValueName>admin_notification_email</ValueName>
+                </Setting>
+                
+                <Setting type="selectbox" initialValue="Y" sort="31" conf="Y">
+                    <Name>Admin bei neuer Retoure benachrichtigen</Name>
+                    <Description>E-Mail an Admin senden, wenn neue Retoure erstellt wird</Description>
+                    <ValueName>notify_admin_on_new_rma</ValueName>
+                    <SelectboxOptions>
+                        <Option value="Y" sort="1">Ja</Option>
+                        <Option value="N" sort="2">Nein</Option>
+                    </SelectboxOptions>
+                </Setting>
+                
+                <!-- Wawi-Synchronisation -->
+                <Setting type="number" initialValue="15" sort="40" conf="Y">
+                    <Name>Wawi-Sync-Intervall (Minuten)</Name>
+                    <Description>Intervall in Minuten für automatische Wawi-Synchronisation</Description>
+                    <ValueName>wawi_sync_interval</ValueName>
+                </Setting>
+                
+                <Setting type="selectbox" initialValue="Y" sort="41" conf="Y">
+                    <Name>Automatische Wawi-Synchronisation</Name>
+                    <Description>RMAs automatisch mit JTL-Wawi synchronisieren</Description>
+                    <ValueName>wawi_auto_sync</ValueName>
+                    <SelectboxOptions>
+                        <Option value="Y" sort="1">Ja</Option>
+                        <Option value="N" sort="2">Nein</Option>
+                    </SelectboxOptions>
+                </Setting>
+                
+                <!-- Rücksendeadresse -->
+                <Setting type="textarea" initialValue="" sort="50" conf="Y">
+                    <Name>Rücksendeadresse</Name>
+                    <Description>Adresse, an die Retouren gesendet werden sollen (mehrzeilig)</Description>
+                    <ValueName>shop_return_address</ValueName>
+                </Setting>
+            </Settingslink>
+        </Adminmenu>
         
-        <Setting type="selectbox" initialValue="N" sort="2" conf="Y">
-            <Name>Versandkosten automatisch erstatten</Name>
-            <Description>Versandkosten bei Retoure automatisch zurückerstatten</Description>
-            <ValueName>auto_refund_shipping</ValueName>
-            <SelectboxOptions>
-                <Option value="Y" sort="1">Ja</Option>
-                <Option value="N" sort="2">Nein</Option>
-            </SelectboxOptions>
-        </Setting>
-        
-        <!-- Retourenlabel -->
-        <Setting type="selectbox" initialValue="N" sort="10" conf="Y">
-            <Name>Retourenlabel automatisch erstellen</Name>
-            <Description>Retourenlabel bei RMA-Erstellung automatisch generieren</Description>
-            <ValueName>auto_create_label</ValueName>
-            <SelectboxOptions>
-                <Option value="Y" sort="1">Ja</Option>
-                <Option value="N" sort="2">Nein</Option>
-            </SelectboxOptions>
-        </Setting>
-        
-        <Setting type="selectbox" initialValue="dhl" sort="11" conf="Y">
-            <Name>Versanddienstleister</Name>
-            <Description>Versanddienstleister für Retourenlabel</Description>
-            <ValueName>shipping_provider</ValueName>
-            <SelectboxOptions>
-                <Option value="dhl" sort="1">DHL</Option>
-                <Option value="dpd" sort="2">DPD</Option>
-                <Option value="ups" sort="3">UPS</Option>
-                <Option value="hermes" sort="4">Hermes</Option>
-            </SelectboxOptions>
-        </Setting>
-        
-        <Setting type="text" initialValue="" sort="12" conf="Y">
-            <Name>Versanddienstleister API-Key</Name>
-            <Description>API-Schlüssel für Retourenlabel-Erstellung</Description>
-            <ValueName>shipping_api_key</ValueName>
-        </Setting>
-        
-        <!-- Produktausschlüsse -->
-        <Setting type="text" initialValue="" sort="20" conf="Y">
-            <Name>Ausgeschlossene Kategorien</Name>
-            <Description>Kategorie-IDs (kommagetrennt), die von Retouren ausgeschlossen sind</Description>
-            <ValueName>excluded_categories</ValueName>
-        </Setting>
-        
-        <Setting type="textarea" initialValue="" sort="21" conf="Y">
-            <Name>Ausgeschlossene Artikel-Nummern</Name>
-            <Description>Artikel-Nummern (kommagetrennt), die nicht retourniert werden können</Description>
-            <ValueName>excluded_product_nos</ValueName>
-        </Setting>
-        
-        <!-- Benachrichtigungen -->
-        <Setting type="text" initialValue="" sort="30" conf="Y">
-            <Name>Admin-Benachrichtigungs-E-Mail</Name>
-            <Description>E-Mail-Adresse für Admin-Benachrichtigungen (neue RMAs, Fehler)</Description>
-            <ValueName>admin_notification_email</ValueName>
-        </Setting>
-        
-        <Setting type="selectbox" initialValue="Y" sort="31" conf="Y">
-            <Name>Admin bei neuer Retoure benachrichtigen</Name>
-            <Description>E-Mail an Admin senden, wenn neue Retoure erstellt wird</Description>
-            <ValueName>notify_admin_on_new_rma</ValueName>
-            <SelectboxOptions>
-                <Option value="Y" sort="1">Ja</Option>
-                <Option value="N" sort="2">Nein</Option>
-            </SelectboxOptions>
-        </Setting>
-        
-        <!-- Wawi-Synchronisation -->
-        <Setting type="number" initialValue="15" sort="40" conf="Y">
-            <Name>Wawi-Sync-Intervall (Minuten)</Name>
-            <Description>Intervall in Minuten für automatische Wawi-Synchronisation</Description>
-            <ValueName>wawi_sync_interval</ValueName>
-        </Setting>
-        
-        <Setting type="selectbox" initialValue="Y" sort="41" conf="Y">
-            <Name>Automatische Wawi-Synchronisation</Name>
-            <Description>RMAs automatisch mit JTL-Wawi synchronisieren</Description>
-            <ValueName>wawi_auto_sync</ValueName>
-            <SelectboxOptions>
-                <Option value="Y" sort="1">Ja</Option>
-                <Option value="N" sort="2">Nein</Option>
-            </SelectboxOptions>
-        </Setting>
-        
-        <!-- Rücksendeadresse -->
-        <Setting type="textarea" initialValue="" sort="50" conf="Y">
-            <Name>Rücksendeadresse</Name>
-            <Description>Adresse, an die Retouren gesendet werden sollen (mehrzeilig)</Description>
-            <ValueName>shop_return_address</ValueName>
-        </Setting>
-    </Settings>
-    
-    <!-- E-Mail-Templates -->
-    <Emailtemplate>
+        <Emailtemplate>
         <!-- 1. Retouren-Bestätigung -->
         <Template>
             <Name>Retouren-Bestätigung</Name>
@@ -280,15 +289,8 @@ Sie erhalten eine weitere E-Mail, sobald Ihre Retoure bearbeitet wurde.
                 ]]></ContentHtml>
             </TemplateLanguage>
         </Template>
-    </Emailtemplate>
-    
-    <!-- Frontend-Links -->
-    <Link>
-        <Name>Retoure anlegen</Name>
-        <FileName>retoure</FileName>
-        <Visibility>4</Visibility> <!-- Immer sichtbar -->
-        <Sort>100</Sort>
-    </Link>
+        </Emailtemplate>
+    </Install>
     
     <!-- Lizenz -->
     <Licence>
