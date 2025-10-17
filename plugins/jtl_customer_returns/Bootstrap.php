@@ -30,6 +30,9 @@ class Bootstrap extends Bootstrapper
         
         // Frontend-Routes registrieren
         $this->registerRoutes();
+        
+        // Smarty-Helper registrieren
+        $this->registerSmartyHelpers();
     }
     
     /**
@@ -40,6 +43,16 @@ class Bootstrap extends Bootstrapper
      */
     private function registerEventListeners(Dispatcher $dispatcher): void
     {
+        // Hook 27: Kundenkonto - Retouren-Widget einbinden
+        $dispatcher->listen('shop.hook.' . \HOOK_JTL_PAGE_MEINKKONTO, function ($args) {
+            $this->renderCustomerReturnsWidget();
+        });
+        
+        // Hook 140: DOM-Manipulation - Retoure-Button in Bestelldetails
+        $dispatcher->listen('shop.hook.' . \HOOK_SMARTY_OUTPUTFILTER, function ($args) {
+            $this->injectReturnButtonIntoOrderDetails($args);
+        });
+        
         // 1. Order Shipped - Retourenfrist starten
         $dispatcher->listen('shop.order.shipped', function ($event) {
             $orderID = $event['orderID'] ?? 0;
@@ -114,6 +127,114 @@ class Bootstrap extends Bootstrapper
     {
         // Routes werden über JTL Shop 5 Routing-System registriert
         // Siehe frontend/ReturnController.php
+    }
+    
+    /**
+     * Smarty-Helper registrieren
+     *
+     * @return void
+     */
+    private function registerSmartyHelpers(): void
+    {
+        // Helper-Funktionen für Templates verfügbar machen
+        // Werden in Templates via {include} verwendet
+    }
+    
+    /**
+     * Retouren-Widget im Kundenkonto rendern (Hook 27)
+     *
+     * @return void
+     */
+    private function renderCustomerReturnsWidget(): void
+    {
+        $customer = Shop::Container()->getCustomerService()->getLoggedInCustomer();
+        
+        if (!$customer) {
+            return;
+        }
+        
+        try {
+            $rmaRepo = new \Plugin\jtl_customer_returns\Repositories\RMARepository();
+            $rmas = $rmaRepo->getByCustomerID($customer->kKunde);
+            
+            // Nur die letzten 5 Retouren anzeigen
+            $rmas = array_slice($rmas, 0, 5);
+            
+            // Offene Retouren zählen
+            $openRMAsCount = count(array_filter($rmas, fn($rma) => $rma->getStatus() < 3));
+            
+            $smarty = Shop::Smarty();
+            $smarty->assign('customerRMAs', $rmas);
+            $smarty->assign('openRMAsCount', $openRMAsCount);
+            
+            $templatePath = $this->getPlugin()->getPaths()->getFrontendPath() . 'template/my_returns_widget.tpl';
+            $html = $smarty->fetch($templatePath);
+            
+            // Widget in Seite einfügen (nach Bestellungen)
+            \pq('.account-orders-wrapper')->after($html);
+            
+        } catch (\Exception $e) {
+            $this->getLogger()->error("Fehler beim Rendern des Retouren-Widgets: {$e->getMessage()}");
+        }
+    }
+    
+    /**
+     * Retoure-Button in Bestelldetails einbinden (Hook 140)
+     *
+     * @param array $args
+     * @return void
+     */
+    private function injectReturnButtonIntoOrderDetails(array $args): void
+    {
+        $smarty = $args['smarty'] ?? null;
+        $document = $args['document'] ?? null;
+        
+        if (!$smarty || !$document) {
+            return;
+        }
+        
+        // Nur auf Bestelldetail-Seite aktiv
+        if (Shop::getPageType() !== \PAGE_BESTELLDETAILS) {
+            return;
+        }
+        
+        $customer = Shop::Container()->getCustomerService()->getLoggedInCustomer();
+        
+        if (!$customer) {
+            return;
+        }
+        
+        try {
+            // Bestellung aus Smarty-Variable holen
+            $order = $smarty->getTemplateVars('Bestellung');
+            
+            if (!$order || !isset($order->kBestellung)) {
+                return;
+            }
+            
+            // Controller instanziieren und Button-Daten holen
+            $controller = new \Plugin\jtl_customer_returns\Controllers\ReturnController();
+            $buttonData = $controller->getReturnButtonData((int)$order->kBestellung);
+            
+            if (empty($buttonData)) {
+                return;
+            }
+            
+            // Template rendern
+            $smarty->assign('isReturnable', $buttonData['isReturnable']);
+            $smarty->assign('returnPeriodDays', $buttonData['returnPeriodDays']);
+            $smarty->assign('existingRMA', $buttonData['existingRMA'] ?? null);
+            $smarty->assign('order', $buttonData['order']);
+            
+            $templatePath = $this->getPlugin()->getPaths()->getFrontendPath() . 'template/order_detail_return_button.tpl';
+            $html = $smarty->fetch($templatePath);
+            
+            // Button nach Bestellstatus einfügen
+            \pq('.order-details .order-status')->after($html);
+            
+        } catch (\Exception $e) {
+            $this->getLogger()->error("Fehler beim Einfügen des Retoure-Buttons: {$e->getMessage()}");
+        }
     }
     
     /**

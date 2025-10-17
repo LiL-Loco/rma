@@ -331,5 +331,11 @@ Die Gutschrift wird in den nächsten 3-5 Werktagen auf Ihrem Konto eingehen.]]><
                 </TemplateLanguage>
             </Template>
         </Emailtemplate>
+        
+        <!-- Hook-Registrierung -->
+        <Hooks>
+            <Hook id="27">frontend/hook27.php</Hook>
+            <Hook id="140">frontend/hook140.php</Hook>
+        </Hooks>
     </Install>
 </jtlshopplugin>

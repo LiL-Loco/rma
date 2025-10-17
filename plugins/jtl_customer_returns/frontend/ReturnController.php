@@ -299,6 +299,150 @@ class ReturnController
     }
     
     /**
+     * Action: Retoure für spezifische Bestellung anlegen (eingeloggte Kunden)
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
+    public function actionCreate(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    {
+        // Login-Check
+        $customer = Shop::Container()->getCustomerService()->getLoggedInCustomer();
+        
+        if (!$customer) {
+            return $response->withStatus(302)->withHeader('Location', '/jtl.php?li');
+        }
+        
+        $params = $request->getQueryParams();
+        $orderID = (int)($params['orderID'] ?? 0);
+        
+        if (!$orderID) {
+            return $response->withStatus(302)->withHeader('Location', '/kundenkonto');
+        }
+        
+        // Prüfen ob Bestellung zum Kunden gehört
+        $db = Shop::Container()->getDB();
+        $order = $db->select('tbestellung', 'kBestellung', $orderID);
+        
+        if (!$order || (int)$order->kKunde !== $customer->kKunde) {
+            $this->smarty->assign('error', 'Bestellung nicht gefunden oder Sie haben keine Berechtigung.');
+            return $this->render('error.tpl', $response);
+        }
+        
+        // Prüfen ob bereits RMA existiert
+        $existingRMA = $this->rmaRepo->getByOrderID($orderID);
+        
+        if ($existingRMA) {
+            // Weiterleitung zur RMA-Detail-Seite
+            return $response->withStatus(302)->withHeader(
+                'Location', 
+                '/plugin/customer_returns/detail/' . $existingRMA->getId()
+            );
+        }
+        
+        // Session mit Bestelldaten vorbelegen
+        $_SESSION['rma_order_data'] = [
+            'orderID' => $orderID,
+            'customerID' => $customer->kKunde,
+            'orderNo' => $order->cBestellNr,
+            'email' => $customer->cMail
+        ];
+        
+        // Direkt zur Produktauswahl
+        return $response->withStatus(302)->withHeader('Location', '/plugin/customer_returns/select-products');
+    }
+    
+    /**
+     * Action: RMA-Detail anzeigen
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @param array $args
+     * @return ResponseInterface
+     */
+    public function actionDetail(ServerRequestInterface $request, ResponseInterface $response, array $args = []): ResponseInterface
+    {
+        // Login-Check
+        $customer = Shop::Container()->getCustomerService()->getLoggedInCustomer();
+        
+        if (!$customer) {
+            return $response->withStatus(302)->withHeader('Location', '/jtl.php?li');
+        }
+        
+        $rmaID = (int)($args['id'] ?? 0);
+        
+        if (!$rmaID) {
+            return $response->withStatus(302)->withHeader('Location', '/kundenkonto/retouren');
+        }
+        
+        // RMA laden
+        $rma = $this->rmaRepo->getById($rmaID);
+        
+        if (!$rma || (int)$rma->getCustomerID() !== $customer->kKunde) {
+            $this->smarty->assign('error', 'Retoure nicht gefunden oder Sie haben keine Berechtigung.');
+            return $this->render('error.tpl', $response);
+        }
+        
+        // Items laden
+        $items = $this->itemRepo->getByRmaID($rmaID);
+        
+        // Bestellung laden
+        $db = Shop::Container()->getDB();
+        $order = $db->select('tbestellung', 'kBestellung', $rma->getOrderID());
+        
+        $this->smarty->assign('pageTitle', 'Retoure ' . $rma->getRmaNr());
+        $this->smarty->assign('rma', $rma);
+        $this->smarty->assign('items', $items);
+        $this->smarty->assign('order', $order);
+        $this->smarty->assign('hasLabel', $rma->getLabelPath() !== null);
+        
+        return $this->render('return_detail.tpl', $response);
+    }
+    
+    /**
+     * Widget: Retoure-Button für Bestelldetails
+     * (Wird vom Bootstrap via Smarty-Plugin aufgerufen)
+     *
+     * @param int $orderID
+     * @return array
+     */
+    public function getReturnButtonData(int $orderID): array
+    {
+        $customer = Shop::Container()->getCustomerService()->getLoggedInCustomer();
+        
+        if (!$customer) {
+            return ['isReturnable' => false];
+        }
+        
+        // Prüfen ob Bestellung retournierbar ist
+        $db = Shop::Container()->getDB();
+        $order = $db->select('tbestellung', 'kBestellung', $orderID);
+        
+        if (!$order || (int)$order->kKunde !== $customer->kKunde) {
+            return ['isReturnable' => false];
+        }
+        
+        // Retourenfrist prüfen
+        $config = Shop::Container()->getConfigService();
+        $returnPeriodDays = (int)$config->get('jtl_customer_returns_return_period_days', 14);
+        
+        $orderDate = strtotime($order->dErstellt);
+        $returnDeadline = strtotime("+{$returnPeriodDays} days", $orderDate);
+        $isReturnable = time() <= $returnDeadline;
+        
+        // Prüfen ob bereits RMA existiert
+        $existingRMA = $this->rmaRepo->getByOrderID($orderID);
+        
+        return [
+            'order' => $order,
+            'isReturnable' => $isReturnable,
+            'returnPeriodDays' => $returnPeriodDays,
+            'existingRMA' => $existingRMA
+        ];
+    }
+    
+    /**
      * Template rendern
      *
      * @param string $template
