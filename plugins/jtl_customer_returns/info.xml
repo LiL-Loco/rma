@@ -159,8 +159,8 @@
                 <AGB>0</AGB>
                 <WRB>0</WRB>
                 <TemplateLanguage iso="GER">
-                <Subject>Ihre Retoure {$rma_number} wurde registriert</Subject>
-                <ContentHtml><![CDATA[
+                    <Subject>Ihre Retoure wurde registriert</Subject>
+                    <ContentHtml><![CDATA[
 {includeMailTemplate template=header type=html}
 <p>Sehr geehrte/r {$customer_name},</p>
 <p>Ihre Retoure mit der Nummer <strong>{$rma_number}</strong> wurde erfolgreich registriert.</p>
@@ -219,8 +219,8 @@ Sie erhalten eine weitere E-Mail, sobald Ihre Retoure bearbeitet wurde.
                 <AGB>0</AGB>
                 <WRB>0</WRB>
                 <TemplateLanguage iso="GER">
-                <Subject>Ihre Retoure {$rma_number} - Status: {$new_status}</Subject>
-                <ContentHtml><![CDATA[
+                    <Subject>Ihre Retoure - Status Update</Subject>
+                    <ContentHtml><![CDATA[
 {includeMailTemplate template=header type=html}
 <p>Sehr geehrte/r {$customer_name},</p>
 <p>Der Status Ihrer Retoure <strong>{$rma_number}</strong> hat sich geändert.</p>
@@ -249,7 +249,7 @@ Kommentar: {$admin_comment}
 {/if}
 
 Bei Fragen stehen wir Ihnen gerne zur Verfügung.]]></ContentText>
-            </TemplateLanguage>
+                </TemplateLanguage>
             </Template>
             
             <!-- 3. Gutschein -->
@@ -263,8 +263,8 @@ Bei Fragen stehen wir Ihnen gerne zur Verfügung.]]></ContentText>
                 <AGB>0</AGB>
                 <WRB>0</WRB>
                 <TemplateLanguage iso="GER">
-                <Subject>Ihr Gutschein für Retoure {$rma_number}</Subject>
-                <ContentHtml><![CDATA[
+                    <Subject>Ihr Gutschein fuer Ihre Retoure</Subject>
+                    <ContentHtml><![CDATA[
 {includeMailTemplate template=header type=html}
 <p>Sehr geehrte/r {$customer_name},</p>
 <p>Für Ihre Retoure <strong>{$rma_number}</strong> wurde ein Gutschein erstellt:</p>
@@ -289,7 +289,7 @@ Wert: {$voucher_amount|number_format:2} €
 Gültig bis: {$voucher_expires|date_format:"%d.%m.%Y"}
 
 Sie können den Gutschein im Warenkorb einlösen.]]></ContentText>
-            </TemplateLanguage>
+                </TemplateLanguage>
             </Template>
             
             <!-- 4. Rückzahlung -->
@@ -303,8 +303,8 @@ Sie können den Gutschein im Warenkorb einlösen.]]></ContentText>
                 <AGB>0</AGB>
                 <WRB>0</WRB>
                 <TemplateLanguage iso="GER">
-                <Subject>Rückzahlung für Retoure {$rma_number} verarbeitet</Subject>
-                <ContentHtml><![CDATA[
+                    <Subject>Rueckzahlung fuer Ihre Retoure</Subject>
+                    <ContentHtml><![CDATA[
 {includeMailTemplate template=header type=html}
 <p>Sehr geehrte/r {$customer_name},</p>
 <p>Die Rückzahlung für Ihre Retoure <strong>{$rma_number}</strong> wurde verarbeitet.</p>
@@ -328,35 +328,8 @@ Zahlungsmethode: {$payment_method}
 Voraussichtliche Buchung: {$refund_date|date_format:"%d.%m.%Y"}
 
 Die Gutschrift wird in den nächsten 3-5 Werktagen auf Ihrem Konto eingehen.]]></ContentText>
-            </TemplateLanguage>
+                </TemplateLanguage>
             </Template>
         </Emailtemplate>
     </Install>
-    
-    <!-- Lizenz -->
-    <Licence>
-        <![CDATA[
-MIT License
-
-Copyright (c) 2025 Development Team
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-        ]]>
-    </Licence>
 </jtlshopplugin>
