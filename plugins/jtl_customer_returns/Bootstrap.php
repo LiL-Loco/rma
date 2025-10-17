@@ -28,9 +28,6 @@ class Bootstrap extends Bootstrapper
         // Event-Listener registrieren
         $this->registerEventListeners($dispatcher);
         
-        // Smarty-Plugins registrieren
-        $this->registerSmartyPlugins();
-        
         // Frontend-Routes registrieren
         $this->registerRoutes();
     }
@@ -106,30 +103,6 @@ class Bootstrap extends Bootstrapper
                 $this->handleWawiUpdate($rmaID, $data);
             }
         });
-    }
-    
-    /**
-     * Smarty-Plugins registrieren
-     *
-     * @return void
-     */
-    private function registerSmartyPlugins(): void
-    {
-        $smarty = Shop::Container()->getSmarty();
-        
-        // Retouren-Menü-Link
-        $smarty->registerPlugin(
-            \Smarty::PLUGIN_FUNCTION,
-            'customer_returns_menu',
-            [$this, 'renderCustomerReturnsMenu']
-        );
-        
-        // Retoure-Button
-        $smarty->registerPlugin(
-            \Smarty::PLUGIN_FUNCTION,
-            'return_button',
-            [$this, 'renderReturnButton']
-        );
     }
     
     /**
