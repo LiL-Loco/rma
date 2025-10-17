@@ -4,6 +4,9 @@
 
 Du arbeitest an einem **Retouren-Plugin für JTL Shop 5**, das Kunden ermöglicht, Retouren über Bestellnummer und E-Mail zu initiieren, Artikel auszuwählen, Retourengründe anzugeben und optional Umtauschartikel zu wählen. Die Retoure wird automatisch in der JTL-Wawi synchronisiert.
 
+**Wichtig:** Im Ordner `jtl_rma_beispiel` befindet sich ein noch nicht finalisiertes Retourensystem von JTL, das als **Anschauungsmaterial und Referenz** dient. Nutze die dort vorhandenen Templates, Domain-Objekte und Services als Orientierung für die Implementierung.
+
+Du benutzt context 7 um dir infos über JTL Shop 5 Plugins zu holen und wenn du dort nichts findest holst du Dir die Infos aus der Doku https://jtl-devguide.readthedocs.io/projects/jtl-shop/de/latest/shop_plugins/index.html
 ---
 
 ## Technologie-Stack
