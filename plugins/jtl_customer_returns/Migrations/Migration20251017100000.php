@@ -130,27 +130,8 @@ class Migration20251017100000 extends Migration implements IMigration
             COMMENT='RMA-Historie (Event-Sourcing)'"
         );
         
-        // Default-Retourengründe (Deutsch)
-        $this->execute(
-            "INSERT INTO `rma_reasons` (`ISO`, `reason`, `sortOrder`, `active`) VALUES
-            ('GER', 'Artikel defekt', 1, 1),
-            ('GER', 'Größe/Passform passt nicht', 2, 1),
-            ('GER', 'Falsche Ware erhalten', 3, 1),
-            ('GER', 'Artikel entspricht nicht der Beschreibung', 4, 1),
-            ('GER', 'Gefällt mir nicht', 5, 1),
-            ('GER', 'Anderer Grund', 99, 1)"
-        );
-        
-        // Default-Retourengründe (Englisch)
-        $this->execute(
-            "INSERT INTO `rma_reasons` (`ISO`, `reason`, `sortOrder`, `active`) VALUES
-            ('ENG', 'Item defective', 1, 1),
-            ('ENG', 'Size/fit does not match', 2, 1),
-            ('ENG', 'Received wrong item', 3, 1),
-            ('ENG', 'Item does not match description', 4, 1),
-            ('ENG', 'Changed my mind', 5, 1),
-            ('ENG', 'Other reason', 99, 1)"
-        );
+        // HINWEIS: Retourengründe werden aus JTL-Wawi synchronisiert
+        // Keine Default-Gründe nötig - Wawi ist Master-System
     }
     
     /**
