@@ -18,7 +18,7 @@
             <Link>
                 <Filename>return_page.php</Filename>
                 <Name>Retoure anlegen</Name>
-                <Template>frontend/templates/return_form.tpl</Template>
+                <Template>return_form.tpl</Template>
                 <VisibleAfterLogin>N</VisibleAfterLogin>
                 <PrintButton>N</PrintButton>
                 <SSL>2</SSL>
@@ -148,14 +148,17 @@
         </Adminmenu>
         
         <Emailtemplate>
-        <!-- 1. Retouren-Bestätigung -->
-        <Template>
-            <Name>Retouren-Bestätigung</Name>
-            <Description>E-Mail bei RMA-Erstellung</Description>
-            <Type>text/html</Type>
-            <ModulId>jtl_customer_returns_confirmation</ModulId>
-            <Active>Y</Active>
-            <TemplateLanguage iso="GER">
+            <!-- 1. Retouren-Bestätigung -->
+            <Template>
+                <Name>Retouren-Bestätigung</Name>
+                <Description>E-Mail bei RMA-Erstellung</Description>
+                <Type>text/html</Type>
+                <ModulId>jtl_customer_returns_confirmation</ModulId>
+                <Active>Y</Active>
+                <AKZ>0</AKZ>
+                <AGB>0</AGB>
+                <WRB>0</WRB>
+                <TemplateLanguage iso="GER">
                 <Subject>Ihre Retoure {$rma_number} wurde registriert</Subject>
                 <ContentHtml><![CDATA[
 {includeMailTemplate template=header type=html}
@@ -202,17 +205,20 @@ Bitte senden Sie die Artikel an folgende Adresse zurück:
 
 Sie erhalten eine weitere E-Mail, sobald Ihre Retoure bearbeitet wurde.
                 ]]></ContentText>
-            </TemplateLanguage>
-        </Template>
-        
-        <!-- 2. Status-Update -->
-        <Template>
-            <Name>Retouren-Status-Update</Name>
-            <Description>E-Mail bei Status-Änderung</Description>
-            <Type>text/html</Type>
-            <ModulId>jtl_customer_returns_status_update</ModulId>
-            <Active>Y</Active>
-            <TemplateLanguage iso="GER">
+                </TemplateLanguage>
+            </Template>
+            
+            <!-- 2. Status-Update -->
+            <Template>
+                <Name>Retouren-Status-Update</Name>
+                <Description>E-Mail bei Status-Änderung</Description>
+                <Type>text/html</Type>
+                <ModulId>jtl_customer_returns_status_update</ModulId>
+                <Active>Y</Active>
+                <AKZ>0</AKZ>
+                <AGB>0</AGB>
+                <WRB>0</WRB>
+                <TemplateLanguage iso="GER">
                 <Subject>Ihre Retoure {$rma_number} - Status: {$new_status}</Subject>
                 <ContentHtml><![CDATA[
 {includeMailTemplate template=header type=html}
@@ -232,17 +238,31 @@ Sie erhalten eine weitere E-Mail, sobald Ihre Retoure bearbeitet wurde.
 
 {includeMailTemplate template=footer type=html}
                 ]]></ContentHtml>
+                <ContentText><![CDATA[Sehr geehrte/r {$customer_name},
+
+Der Status Ihrer Retoure {$rma_number} hat sich geändert.
+
+Neuer Status: {$new_status}
+
+{if $admin_comment}
+Kommentar: {$admin_comment}
+{/if}
+
+Bei Fragen stehen wir Ihnen gerne zur Verfügung.]]></ContentText>
             </TemplateLanguage>
-        </Template>
-        
-        <!-- 3. Gutschein -->
-        <Template>
-            <Name>Retouren-Gutschein</Name>
-            <Description>E-Mail bei Gutscheinerstellung</Description>
-            <Type>text/html</Type>
-            <ModulId>jtl_customer_returns_voucher</ModulId>
-            <Active>Y</Active>
-            <TemplateLanguage iso="GER">
+            </Template>
+            
+            <!-- 3. Gutschein -->
+            <Template>
+                <Name>Retouren-Gutschein</Name>
+                <Description>E-Mail bei Gutscheinerstellung</Description>
+                <Type>text/html</Type>
+                <ModulId>jtl_customer_returns_voucher</ModulId>
+                <Active>Y</Active>
+                <AKZ>0</AKZ>
+                <AGB>0</AGB>
+                <WRB>0</WRB>
+                <TemplateLanguage iso="GER">
                 <Subject>Ihr Gutschein für Retoure {$rma_number}</Subject>
                 <ContentHtml><![CDATA[
 {includeMailTemplate template=header type=html}
@@ -260,17 +280,29 @@ Sie erhalten eine weitere E-Mail, sobald Ihre Retoure bearbeitet wurde.
 
 {includeMailTemplate template=footer type=html}
                 ]]></ContentHtml>
+                <ContentText><![CDATA[Sehr geehrte/r {$customer_name},
+
+Für Ihre Retoure {$rma_number} wurde ein Gutschein erstellt:
+
+Gutscheincode: {$voucher_code}
+Wert: {$voucher_amount|number_format:2} €
+Gültig bis: {$voucher_expires|date_format:"%d.%m.%Y"}
+
+Sie können den Gutschein im Warenkorb einlösen.]]></ContentText>
             </TemplateLanguage>
-        </Template>
-        
-        <!-- 4. Rückzahlung -->
-        <Template>
-            <Name>Retouren-Rückzahlung</Name>
-            <Description>E-Mail bei Rückzahlung</Description>
-            <Type>text/html</Type>
-            <ModulId>jtl_customer_returns_refund</ModulId>
-            <Active>Y</Active>
-            <TemplateLanguage iso="GER">
+            </Template>
+            
+            <!-- 4. Rückzahlung -->
+            <Template>
+                <Name>Retouren-Rückzahlung</Name>
+                <Description>E-Mail bei Rückzahlung</Description>
+                <Type>text/html</Type>
+                <ModulId>jtl_customer_returns_refund</ModulId>
+                <Active>Y</Active>
+                <AKZ>0</AKZ>
+                <AGB>0</AGB>
+                <WRB>0</WRB>
+                <TemplateLanguage iso="GER">
                 <Subject>Rückzahlung für Retoure {$rma_number} verarbeitet</Subject>
                 <ContentHtml><![CDATA[
 {includeMailTemplate template=header type=html}
@@ -287,8 +319,17 @@ Sie erhalten eine weitere E-Mail, sobald Ihre Retoure bearbeitet wurde.
 
 {includeMailTemplate template=footer type=html}
                 ]]></ContentHtml>
+                <ContentText><![CDATA[Sehr geehrte/r {$customer_name},
+
+Die Rückzahlung für Ihre Retoure {$rma_number} wurde verarbeitet.
+
+Betrag: {$refund_amount|number_format:2} €
+Zahlungsmethode: {$payment_method}
+Voraussichtliche Buchung: {$refund_date|date_format:"%d.%m.%Y"}
+
+Die Gutschrift wird in den nächsten 3-5 Werktagen auf Ihrem Konto eingehen.]]></ContentText>
             </TemplateLanguage>
-        </Template>
+            </Template>
         </Emailtemplate>
     </Install>
     
